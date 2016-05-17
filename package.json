@@ -1,0 +1,14 @@
+{
+  "name": "slack-eject",
+  "version": "0.0.1",
+  "description": "uiiin",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "ahiru",
+  "license": "MIT",
+  "devDependencies": {
+    "botkit": "^0.1.1"
+  }
+}
