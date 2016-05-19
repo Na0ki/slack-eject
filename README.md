@@ -1,7 +1,8 @@
 # Slack-Eject
 
 ## 依存関係
-* node: v6.1.0
+* node: v6.2.0
+* BotKit: v0.1.1
 
 ## インストール方法
 ```
