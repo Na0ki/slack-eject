@@ -66,15 +66,46 @@ controller.hears(['devices'], ['message_received', 'direct_message', 'direct_men
 controller.hears(['status (.*)'], ['message_received', 'direct_message', 'direct_mention', 'mention'], function (bot, message) {
 
     var deviceType = message.match[1]; // (.*) を取得
-    var command = 'traystatus ' + deviceType + ' && echo open';
-    var replyMsg;
+    // var command = 'traystatus ' + deviceType + ' && echo open';
+    // var replyMsg;
 
     /**
      * https://www.linuxquestions.org/questions/slackware-14/detect-cd-tray-status-4175450610/
      * を参考にしてrpi内で作成したtraystatusコマンドを実行する
      */
-    exec(command, function (err, stdout) {
-        if (stdout == "open") {
+    // exec(command, function (err, stdout) {
+    //     if (stdout == "open") {
+    //         replyMsg = genMsg(err, "開いてる");
+    //     } else {
+    //         replyMsg = genMsg(err, "閉まってる");
+    //     }
+    //     bot.reply(message, replyMsg);
+    // });
+
+
+
+    var cmd = 'traystatus ' + deviceType + ' && echo open';
+
+    function shSpawn(command) {
+        return spawn('sh', ['-c', command]);
+    }
+
+    var child = shSpawn(cmd);
+    var buf = "";
+
+    child.stdout.on('data', function (data) {
+        buf = buf + data;
+    });
+
+    child.stderr.on('data', function (data) {
+        console.log('exec error: ' + data);
+    });
+
+    child.on('close', function (code) {
+        var replyMsg = genMsg(undefined, buf);
+        if (buf.length == 0) {
+            replyMsg = "( ՞ةڼ◔)oO( なんか失敗した )";
+        } else if (stdout == "open") {
             replyMsg = genMsg(err, "開いてる");
         } else {
             replyMsg = genMsg(err, "閉まってる");
