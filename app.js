@@ -107,7 +107,8 @@ function genMsg(err, stdout) {
     if (err) {
         replyMsg = '[Error]\n( ՞ةڼ◔)oO(\n' + err + '\n)';
     } else {
-        replyMsg = '[Success]\n( ՞ਊ ՞)oO(\n' + stdout + '\n)';
+	var message = (stdout.length == 0) ? "uiiin" : stdout;
+        replyMsg = '[Success]\n( ՞ਊ ՞)oO( ' + message + ' )';
     }
     return replyMsg;
 }
