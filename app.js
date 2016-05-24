@@ -84,7 +84,7 @@ controller.hears(['status (.*)'], ['message_received', 'direct_message', 'direct
 
 
 
-    var cmd = 'traystatus ' + deviceType + ' && echo open';
+    var cmd = 'traystatus ' + deviceType + ' && echo 1';
 
     function shSpawn(command) {
         return spawn('sh', ['-c', command]);
@@ -102,13 +102,12 @@ controller.hears(['status (.*)'], ['message_received', 'direct_message', 'direct
     });
 
     child.on('close', function (code) {
-        var replyMsg = genMsg(undefined, buf);
-        if (buf.length == 0) {
-            replyMsg = "( ՞ةڼ◔)oO( なんか失敗した )";
-        } else if (stdout == "open") {
-            replyMsg = genMsg(err, "開いてる");
+        var replyMsg = "";
+        console.log("buffer: " + buf);
+        if (buf.match(/1/)) {
+            replyMsg = "開いてる";
         } else {
-            replyMsg = genMsg(err, "閉まってる");
+            replyMsg = "閉まってる";
         }
         bot.reply(message, replyMsg);
     });
