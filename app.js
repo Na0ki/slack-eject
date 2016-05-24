@@ -66,24 +66,11 @@ controller.hears(['devices'], ['message_received', 'direct_message', 'direct_men
 controller.hears(['status (.*)'], ['message_received', 'direct_message', 'direct_mention', 'mention'], function (bot, message) {
 
     var deviceType = message.match[1]; // (.*) を取得
-    // var command = 'traystatus ' + deviceType + ' && echo open';
-    // var replyMsg;
-
+    
     /**
      * https://www.linuxquestions.org/questions/slackware-14/detect-cd-tray-status-4175450610/
      * を参考にしてrpi内で作成したtraystatusコマンドを実行する
      */
-    // exec(command, function (err, stdout) {
-    //     if (stdout == "open") {
-    //         replyMsg = genMsg(err, "開いてる");
-    //     } else {
-    //         replyMsg = genMsg(err, "閉まってる");
-    //     }
-    //     bot.reply(message, replyMsg);
-    // });
-
-
-
     var cmd = 'traystatus ' + deviceType + ' && echo 1';
 
     function shSpawn(command) {
