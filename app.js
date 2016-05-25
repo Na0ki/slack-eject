@@ -25,32 +25,40 @@ controller.hears(['eject (.*)'], ['message_received', 'direct_message', 'direct_
 
     // ejectコマンド実行
     exec('eject -T ' + deviceType, function (err, stdout) {
-        var status = getTrayStatus(deviceType);
-        var replyMsg = genMsg(err, status);
-        bot.reply(message, replyMsg);
+
+        var cmd = 'traystatus ' + deviceType + ' && echo 1';
+
+        function shSpawn(command) {
+            return spawn('sh', ['-c', command]);
+        }
+
+        var child = shSpawn(cmd);
+        var buf = "";
+
+        child.stdout.on('data', function (data) {
+            buf = buf + data;
+        });
+
+        child.stderr.on('data', function (data) {
+            console.log('exec error: ' + data);
+        });
+
+        child.on('close', function (code) {
+            var replyMsg = "";
+            console.log("buffer: " + buf);
+            if (buf.match(/1/)) {
+                replyMsg = "開いてる";
+            } else {
+                replyMsg = "閉まってる";
+            }
+            bot.reply(message, genMsg(err, replyMsg));
+        });
     });
 });
 
 
-// CD-ROMドライブの検索
+// cdromデバイス検索
 controller.hears(['devices'], ['message_received', 'direct_message', 'direct_mention', 'mention'], function (bot, message) {
-    var replyMsg = searchDevice();
-    bot.reply(message, replyMsg);
-});
-
-
-// CD-ROMドライブのトレイの開閉状態を確認
-controller.hears(['status (.*)'], ['message_received', 'direct_message', 'direct_mention', 'mention'], function (bot, message) {
-    var deviceType = message.match[1]; // (.*) を取得
-    var result = getTrayStatus(deviceType);
-    bot.reply(message, result);
-});
-
-
-/**
- *
- */
-function searchDevice() {
     var cmd = "ls -l /dev/ | grep cdrom";
 
     function shSpawn(command) {
@@ -73,22 +81,21 @@ function searchDevice() {
         if (buf.length == 0) {
             replyMsg = "( ՞ةڼ◔)oO( CD-ROMドライブが見つからないぽよ )";
         }
-        return replyMsg;
+        bot.reply(message, replyMsg);
     });
-}
+});
 
 
-/**
- *
- * @param deviceType
- */
-function getTrayStatus(deviceType) {
+// cdromの開閉状態を確認
+controller.hears(['status (.*)'], ['message_received', 'direct_message', 'direct_mention', 'mention'], function (bot, message) {
+
+    var deviceType = message.match[1]; // (.*) を取得
+    
     /**
      * https://www.linuxquestions.org/questions/slackware-14/detect-cd-tray-status-4175450610/
      * を参考にしてrpi内で作成したtraystatusコマンドを実行する
      */
     var cmd = 'traystatus ' + deviceType + ' && echo 1';
-    var result;
 
     function shSpawn(command) {
         return spawn('sh', ['-c', command]);
@@ -106,24 +113,19 @@ function getTrayStatus(deviceType) {
     });
 
     child.on('close', function (code) {
-
+        var replyMsg = "";
         console.log("buffer: " + buf);
         if (buf.match(/1/)) {
-            result = "開いてる";
+            replyMsg = "開いてる";
         } else {
-            result = "閉まってる";
+            replyMsg = "閉まってる";
         }
-        return result;
+        bot.reply(message, replyMsg);
     });
-}
+});
 
 
-/**
- * リプライメッセージ生成
- * @param err
- * @param stdout
- * @returns {string}
- */
+// リプライメッセージ生成
 function genMsg(err, stdout) {
     var replyMsg = "";
     if (err) {
