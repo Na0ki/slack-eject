@@ -17,7 +17,9 @@ controller.spawn({
 }).startRTM();
 
 
-// eject実行
+/**
+ * Eject実行
+ */
 controller.hears(['^eject (.*)$'], ['message_received', 'direct_message', 'direct_mention', 'mention'], function (bot, message) {
     var deviceType = message.text.match[1];
     console.log("deviceType: ", deviceType);
@@ -58,7 +60,9 @@ controller.hears(['^eject (.*)$'], ['message_received', 'direct_message', 'direc
 });
 
 
-// CD-ROMドライブの検索
+/**
+ * CD-ROMドライブの検索
+ */
 controller.hears(['^devices (.*)$'], ['message_received', 'direct_message', 'direct_mention', 'mention'], function (bot, message) {
     var grepWord = message.match[1];
     var cmd = "ls -l /dev/ | grep " + grepWord;
@@ -80,7 +84,9 @@ controller.hears(['^devices (.*)$'], ['message_received', 'direct_message', 'dir
 });
 
 
-//CD-ROMドライブのトレイの開閉状態を確認
+/**
+ * CD-ROMドライブのトレイの開閉状態を確認
+ */
 controller.hears(['status (.*)', 'Status (.*)'], ['message_received', 'direct_message', 'direct_mention', 'mention'], function (bot, message) {
 
     var deviceType = message.match[1]; // (.*) を取得
@@ -121,7 +127,7 @@ controller.hears(['status (.*)', 'Status (.*)'], ['message_received', 'direct_me
 
 
 /**
- *
+ * コマンドを実行する
  * @param cmd 実行コマンド
  * @returns {Promise}
  */
@@ -155,7 +161,12 @@ function shSpawn(command) {
 }
 
 
-// リプライメッセージ生成
+/**
+ * リプライメッセージ生成
+ * @param err
+ * @param msg
+ * @returns {string} メッセージ
+ */
 function genMsg(err, msg) {
     var replyMsg = "";
     if (err) {
