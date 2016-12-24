@@ -4,17 +4,30 @@ var Botkit = require('botkit');
 var exec = require('child_process').exec;
 var spawn = require('child_process').spawn;
 var Promise = require('bluebird');
-var config = require('./config');
 
-var controller = Botkit.slackbot({
-    debug: false
+
+if (!process.env.token) {
+    console.log('Error: Specify token in environment');
+    process.exit(1);
+}
+
+const controller = Botkit.slackbot({
+    debug: true
 });
 
 
 // 接続
 controller.spawn({
-    token: config.token
-}).startRTM();
+    token: process.env.token
+}).startRTM(function (err, bot, payload) {
+    console.log("bot" + bot);
+    console.log("payload" + payload);
+
+    // 初期処理
+    if (err) {
+        throw new Error('Could not connect to Slack');
+    }
+});
 
 
 /**
@@ -24,7 +37,7 @@ controller.hears(['^eject (.*)$'], ['message_received', 'direct_message', 'direc
     var deviceType = message.text.match[1];
     console.log("deviceType: ", deviceType);
 
-    if (!deviceType.match(/\/dev\//)) {
+    if (deviceType != null && !deviceType.match(/\/dev\//)) {
         bot.reply(message, "Usage: eject /dev/foo");
         return;
     }

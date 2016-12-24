@@ -1,8 +1,9 @@
 # Slack-Eject
 
 ## 依存関係
-* node: v6.2.0
-* BotKit: v0.1.1
+* node: v7.3.0
+* BotKit: v0.1.2
+* Bluebird: 3.4.7
 
 ## インストール方法
 ```
@@ -13,11 +14,10 @@ $ npm install
 
 ## 使い方
 ### サーバ
-* `config.js` を編集し, `YOUR_BOT_TOKEN` をSlackで取得したbotのトークンに置き換える.
-
 * 実行
+YOUR_TOKENをSlackで取得したbotのトークンに置き換えて実行する.
 ```
-$ node app.js
+$ token=YOUR_TOKEN node app.js
 ```
 
 ### クライアント(Slack)
