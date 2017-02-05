@@ -53,20 +53,12 @@ controller.hears(['^eject (.*)$'], ['message_received', 'direct_message', 'direc
 
         execCmd(cmd)
             .then(function (res, err) {
-                var replyMsg = "";
-                console.log("buffer: " + res);
-                if (res.match(/1/)) {
-                    replyMsg = "開いてる";
-                } else {
-                    replyMsg = "閉まってる";
-                }
-
+                var replyMsg = res.match(/1/) ? "開いてる" : "閉まってる";
                 bot.reply(message, genMsg(err, replyMsg));
             })
             .catch(function (err) {
-                console.log(err);
+                console.error(err);
                 var replyMsg = "[Error] " + err;
-
                 bot.reply(message, replyMsg);
             });
     });
