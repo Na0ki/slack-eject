@@ -49,7 +49,7 @@ controller.hears(['(ういーん|ウイーン|(☝ ՞ਊ ՞)☝)'], ['message_re
             bot.reply(message, "失敗…");
         }
         console.log(stdout);
-        bot.reply("成功！");
+        bot.reply(message, "成功！");
         // var cmd = 'traystatus ' + deviceType + ' && echo 1';
         //
         // execCmd(cmd)
