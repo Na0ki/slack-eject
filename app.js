@@ -47,9 +47,10 @@ controller.hears(['(ういーん|ウイーン|(☝ ՞ਊ ՞)☝)'], ['message_re
         if (err) {
             console.error(err);
             bot.reply(message, "失敗…");
+        } else {
+            console.log(stdout);
+            bot.reply(message, "成功！");
         }
-        console.log(stdout);
-        bot.reply(message, "成功！");
         // var cmd = 'traystatus ' + deviceType + ' && echo 1';
         //
         // execCmd(cmd)
