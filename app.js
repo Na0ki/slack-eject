@@ -33,7 +33,7 @@ controller.spawn({
 /**
  * Eject実行
  */
-controller.hears(['^eject (.*)$'], ['message_received', 'direct_message', 'direct_mention', 'mention'], function (bot, message) {
+controller.hears(['(ういーん|ウイーン|(☝ ՞ਊ ՞)☝)'], ['message_received', 'direct_message', 'direct_mention', 'mention'], function (bot, message) {
     var deviceType = message.text.match[1];
     console.log("deviceType: ", deviceType);
 
@@ -46,21 +46,22 @@ controller.hears(['^eject (.*)$'], ['message_received', 'direct_message', 'direc
     exec('eject -T ' + deviceType, function (err, stdout) {
         if (err) {
             console.error(err);
-            bot.reply(message, "Error Occurred on Eject");
+            bot.reply(message, "失敗…");
         }
         console.log(stdout);
-        var cmd = 'traystatus ' + deviceType + ' && echo 1';
-
-        execCmd(cmd)
-            .then(function (res, err) {
-                var replyMsg = res.match(/1/) ? "開いてる" : "閉まってる";
-                bot.reply(message, genMsg(err, replyMsg));
-            })
-            .catch(function (err) {
-                console.error(err);
-                var replyMsg = "[Error] " + err;
-                bot.reply(message, replyMsg);
-            });
+        bot.reply("成功！");
+        // var cmd = 'traystatus ' + deviceType + ' && echo 1';
+        //
+        // execCmd(cmd)
+        //     .then(function (res, err) {
+        //         var replyMsg = res.match(/1/) ? "開いてる" : "閉まってる";
+        //         bot.reply(message, genMsg(err, replyMsg));
+        //     })
+        //     .catch(function (err) {
+        //         console.error(err);
+        //         var replyMsg = "[Error] " + err;
+        //         bot.reply(message, replyMsg);
+        //     });
     });
 });
 
@@ -92,43 +93,43 @@ controller.hears(['^devices (.*)$'], ['message_received', 'direct_message', 'dir
 /**
  * CD-ROMドライブのトレイの開閉状態を確認
  */
-controller.hears(['status (.*)', 'Status (.*)'], ['message_received', 'direct_message', 'direct_mention', 'mention'], function (bot, message) {
-
-    var deviceType = message.match[1]; // (.*) を取得
-    if (!deviceType.match(/\/dev\//)) {
-        bot.reply(message, "Usage: status /dev/hoge");
-        return;
-    }
-
-    /**
-     * https://www.linuxquestions.org/questions/slackware-14/detect-cd-tray-status-4175450610/
-     * を参考にしてrpi内で作成したtraystatusコマンドを実行する
-     */
-    var cmd = 'traystatus ' + deviceType + ' && echo 1';
-
-    execCmd(cmd)
-        .then(function (res, err) {
-            var replyMsg = "";
-            if (err) {
-                replyMsg = "[Error] " + err;
-                console.log(replyMsg);
-                bot.reply(message, replyMsg);
-                return;
-            }
-            console.log("buffer: " + res);
-            if (res.match(/1/)) {
-                replyMsg = "開いてる";
-            } else {
-                replyMsg = "閉まってる";
-            }
-            bot.reply(message, replyMsg);
-        })
-        .catch(function (err) {
-            console.log(err);
-            var replyMsg = "[Error] " + err;
-            bot.reply(message, replyMsg);
-        });
-});
+// controller.hears(['status (.*)', 'Status (.*)'], ['message_received', 'direct_message', 'direct_mention', 'mention'], function (bot, message) {
+//
+//     var deviceType = message.match[1]; // (.*) を取得
+//     if (!deviceType.match(/\/dev\//)) {
+//         bot.reply(message, "Usage: status /dev/hoge");
+//         return;
+//     }
+//
+//     /**
+//      * https://www.linuxquestions.org/questions/slackware-14/detect-cd-tray-status-4175450610/
+//      * を参考にしてrpi内で作成したtraystatusコマンドを実行する
+//      */
+//     var cmd = 'traystatus ' + deviceType + ' && echo 1';
+//
+//     execCmd(cmd)
+//         .then(function (res, err) {
+//             var replyMsg = "";
+//             if (err) {
+//                 replyMsg = "[Error] " + err;
+//                 console.log(replyMsg);
+//                 bot.reply(message, replyMsg);
+//                 return;
+//             }
+//             console.log("buffer: " + res);
+//             if (res.match(/1/)) {
+//                 replyMsg = "開いてる";
+//             } else {
+//                 replyMsg = "閉まってる";
+//             }
+//             bot.reply(message, replyMsg);
+//         })
+//         .catch(function (err) {
+//             console.log(err);
+//             var replyMsg = "[Error] " + err;
+//             bot.reply(message, replyMsg);
+//         });
+// });
 
 
 /**
