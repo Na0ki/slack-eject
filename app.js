@@ -34,16 +34,16 @@ controller.spawn({
  * Eject実行
  */
 controller.hears(['(ういーん|ウイーン|(☝ ՞ਊ ՞)☝)'], ['message_received', 'direct_message', 'direct_mention', 'mention'], function (bot, message) {
-    var deviceType = message.text.match[1];
-    console.log("deviceType: ", deviceType);
-
-    if (deviceType != null && !deviceType.match(/\/dev\//)) {
-        bot.reply(message, "Usage: eject /dev/foo");
-        return;
-    }
+    // var deviceType = message.text.match[1];
+    // console.log("deviceType: ", deviceType);
+    //
+    // if (deviceType != null && !deviceType.match(/\/dev\//)) {
+    //     bot.reply(message, "Usage: eject /dev/foo");
+    //     return;
+    // }
 
     // ejectコマンド実行
-    exec('eject -T ' + deviceType, function (err, stdout) {
+    exec('eject -T /dev/cdrom', function (err, stdout) {
         if (err) {
             console.error(err);
             bot.reply(message, "失敗…");
